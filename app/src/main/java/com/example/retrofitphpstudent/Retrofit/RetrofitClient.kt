@@ -1,6 +1,9 @@
 package com.example.retrofitphpstudent.Retrofit
 
 import com.example.retrofitphpstudent.ApiInterface.Api
+import com.google.gson.GsonBuilder
+import okhttp3.OkHttpClient
+import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.create
@@ -11,10 +14,21 @@ class RetrofitClient {
     var retrofitClient:RetrofitClient? = null
     lateinit var retrofit:Retrofit
 
+    val builder:OkHttpClient.Builder = OkHttpClient.Builder()
+    val interceptor:HttpLoggingInterceptor = HttpLoggingInterceptor()
+
     constructor(){
+        val gson = GsonBuilder()
+            .setLenient()
+            .create()
+
+        interceptor.level = HttpLoggingInterceptor.Level.BODY
+        builder.addInterceptor(interceptor)
+
         retrofit = Retrofit.Builder()
             .baseUrl(BASE_URL)
             .addConverterFactory(GsonConverterFactory.create())
+            .client(builder.build())
             .build()
     }
 

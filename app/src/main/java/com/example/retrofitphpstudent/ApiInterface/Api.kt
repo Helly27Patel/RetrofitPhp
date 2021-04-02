@@ -1,5 +1,6 @@
 package com.example.retrofitphpstudent.ApiInterface
 
+import com.example.retrofitphpstudent.ResponseModel.LoginResponse
 import com.example.retrofitphpstudent.ResponseModel.RegisterResponse
 import retrofit2.Call
 import retrofit2.http.Field
@@ -15,4 +16,11 @@ interface Api {
         @Field("email") email:String,
         @Field("password") password:String
     ):Call<RegisterResponse>
+
+    @FormUrlEncoded
+    @POST("login.php")
+    fun login(
+            @Field("email") email:String,
+            @Field("password") password:String
+    ):Call<LoginResponse>
 }
