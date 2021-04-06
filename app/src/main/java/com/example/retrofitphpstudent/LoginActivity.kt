@@ -12,6 +12,7 @@ import android.widget.TextView
 import android.widget.Toast
 import com.example.retrofitphpstudent.ResponseModel.LoginResponse
 import com.example.retrofitphpstudent.Retrofit.RetrofitClient
+import com.example.retrofitphpstudent.SharedPrefrence.SharedPrefrenceManager
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -22,6 +23,7 @@ class LoginActivity : AppCompatActivity() {
     lateinit var mEdtUserLoginPassword: EditText
     lateinit var mBtnLogin: Button
     lateinit var mTxtGoToRegister: TextView
+    lateinit var sharedPrefrenceManager:SharedPrefrenceManager
 
     companion object{
         val KEY = "LoginActivity"
@@ -43,6 +45,7 @@ class LoginActivity : AppCompatActivity() {
         mEdtUserLoginEmail  =findViewById(R.id.edtUserLoginEmail)
         mEdtUserLoginPassword  =findViewById(R.id.edtUserLoginPassword)
         mBtnLogin = findViewById(R.id.btnLogin)
+        sharedPrefrenceManager = SharedPrefrenceManager(this)
 
         //Redirect user to Register Page
         mTxtGoToRegister.setOnClickListener {
@@ -97,6 +100,10 @@ class LoginActivity : AppCompatActivity() {
                         Toast.makeText(this@LoginActivity,loginResponse.message, Toast.LENGTH_LONG).show()
                         Log.d(KEY,loginResponse.message)
                     }else{
+                        //save data to shared Preferences
+                        sharedPrefrenceManager.saveStudent(loginResponse.user)
+
+
                         var intent = Intent(this@LoginActivity, HomeActivity::class.java)
                         intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
                         startActivity(intent)
@@ -112,5 +119,15 @@ class LoginActivity : AppCompatActivity() {
             }
 
         })
+    }
+
+    override fun onStart() {
+        super.onStart()
+        //check if already login or not
+        if (sharedPrefrenceManager.isLoggedIn()){
+            var intent = Intent(this@LoginActivity, HomeActivity::class.java)
+            intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
+            startActivity(intent)
+        }
     }
 }
