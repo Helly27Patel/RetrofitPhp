@@ -1,4 +1,4 @@
-package com.example.retrofitphpstudent
+package com.example.retrofitphpstudent.Activity
 
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
@@ -10,6 +10,7 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
+import com.example.retrofitphpstudent.R
 import com.example.retrofitphpstudent.ResponseModel.RegisterResponse
 import com.example.retrofitphpstudent.Retrofit.RetrofitClient
 import retrofit2.Call
