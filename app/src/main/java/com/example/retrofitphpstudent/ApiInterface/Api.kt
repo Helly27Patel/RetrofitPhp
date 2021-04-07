@@ -1,10 +1,12 @@
 package com.example.retrofitphpstudent.ApiInterface
 
+import com.example.retrofitphpstudent.ResponseModel.FetchStudentAllResponse
 import com.example.retrofitphpstudent.ResponseModel.LoginResponse
 import com.example.retrofitphpstudent.ResponseModel.RegisterResponse
 import retrofit2.Call
 import retrofit2.http.Field
 import retrofit2.http.FormUrlEncoded
+import retrofit2.http.GET
 import retrofit2.http.POST
 
 interface Api {
@@ -23,4 +25,8 @@ interface Api {
             @Field("email") email:String,
             @Field("password") password:String
     ):Call<LoginResponse>
+
+
+    @GET("login.php")
+    fun fetchAllStudent():Call<FetchStudentAllResponse>
 }
