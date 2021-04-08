@@ -27,6 +27,6 @@ interface Api {
     ):Call<LoginResponse>
 
 
-    @GET("login.php")
+    @GET("fetchstudent.php")
     fun fetchAllStudent():Call<FetchStudentAllResponse>
 }

@@ -5,14 +5,41 @@
     android:layout_height="match_parent"
     tools:context=".Fragment.DashboardFragment">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="Dashboard Fragment"
-        android:textAlignment="center"
-        android:textColor="@color/black"
-        android:textSize="30sp"
-        android:textStyle="bold" />
+        android:layout_height="wrap_content"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:layout_margin="10dp"
+        android:padding="10dp"
+        app:cardElevation="8dp"
+        app:cardCornerRadius="4dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_margin="10dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Helly"
+                android:id="@+id/txtStudentNameDashboard"
+                android:textColor="@color/black"
+                android:textSize="30sp"
+                android:textStyle="bold"
+                android:layout_marginBottom="7dp"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Helly@gmail.com"
+                android:id="@+id/txtStudentEmailDashboard"
+                android:textColor="@color/black"
+                android:textSize="21sp"/>
+
+        </LinearLayout>
+
+    </androidx.cardview.widget.CardView>
 
 </FrameLayout>
