@@ -1,34 +1,29 @@
 package com.example.retrofitphpstudent.Fragment
 
 import android.os.Bundle
+import android.util.Patterns
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
+import android.widget.EditText
+import android.widget.Toast
 import com.example.retrofitphpstudent.R
+import com.example.retrofitphpstudent.ResponseModel.LoginResponse
+import com.example.retrofitphpstudent.Retrofit.RetrofitClient
+import com.example.retrofitphpstudent.SharedPrefrence.SharedPrefrenceManager
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
 
-/**
- * A simple [Fragment] subclass.
- * Use the [ProfileFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
 class ProfileFragment : Fragment() {
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
-        }
-    }
+    lateinit var edtUserName:EditText
+    lateinit var edtUserEmail:EditText
+    lateinit var btnUpdate:Button
+    lateinit var sharedPrefrenceManager:SharedPrefrenceManager
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
@@ -36,23 +31,64 @@ class ProfileFragment : Fragment() {
         return inflater.inflate(R.layout.fragment_profile, container, false)
     }
 
-    companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment ProfileFragment.
-         */
-        // TODO: Rename and change types and number of parameters
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-                ProfileFragment().apply {
-                    arguments = Bundle().apply {
-                        putString(ARG_PARAM1, param1)
-                        putString(ARG_PARAM2, param2)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        edtUserName= view.findViewById(R.id.edtUserNameProfile)
+        edtUserEmail= view.findViewById(R.id.edtUserEmailProfile)
+        btnUpdate = view.findViewById(R.id.btnUpdate)
+
+        sharedPrefrenceManager = SharedPrefrenceManager(activity!!)
+
+        var studId:Int = sharedPrefrenceManager.getUser().stud_id.toInt()
+
+        btnUpdate.setOnClickListener {
+            updateUserInfo(studId)
+        }
+    }
+
+    private fun updateUserInfo(id:Int) {
+        val userEmail = edtUserEmail.text.toString()
+        val userName = edtUserName.text.toString()
+        if (userEmail.isEmpty()){
+            edtUserEmail.requestFocus()
+            edtUserEmail.error = "Please Enter Email"
+            return
+        }
+        if (!Patterns.EMAIL_ADDRESS.matcher(userEmail).matches()){
+            edtUserEmail.requestFocus()
+            edtUserEmail.error = "Please Enter Correct Email"
+            return
+        }
+        if (userName.isEmpty()){
+            edtUserName.requestFocus()
+            edtUserName.error = "Please Enter Email"
+            return
+        }
+
+        var call:Call<LoginResponse> = RetrofitClient()
+                .getInstance()
+                .getApi()
+                .updateStudent(id,userName,userEmail)
+
+        call.enqueue(object :Callback<LoginResponse>{
+            override fun onResponse(call: Call<LoginResponse>, response: Response<LoginResponse>) {
+                var updateResponse:LoginResponse = response.body()!!
+
+                if (response.isSuccessful){
+                    if (updateResponse.error == 0){
+                        sharedPrefrenceManager.saveStudent(updateResponse.user)
+                        Toast.makeText(activity,updateResponse.message,Toast.LENGTH_LONG).show()
+                    }else{
+                        Toast.makeText(activity,updateResponse.message,Toast.LENGTH_LONG).show()
                     }
                 }
+            }
+
+            override fun onFailure(call: Call<LoginResponse>, t: Throwable) {
+                Toast.makeText(activity,t.message,Toast.LENGTH_LONG).show()
+            }
+        })
+        
     }
 }

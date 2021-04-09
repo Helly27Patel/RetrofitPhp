@@ -29,4 +29,12 @@ interface Api {
 
     @GET("fetchstudent.php")
     fun fetchAllStudent():Call<FetchStudentAllResponse>
+
+    @FormUrlEncoded
+    @POST("updateuser.php")
+    fun updateStudent(
+            @Field("studid") id:Int,
+            @Field("studname") name:String,
+            @Field("studemail") email:String
+    ):Call<LoginResponse>
 }
